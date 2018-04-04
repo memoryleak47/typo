@@ -28,11 +28,46 @@ fn get_chance<'a>(word: &str, words: &Words<'a>) -> f32 {
 
 	const N: f32 = 1000f32;
 
-	100f32 * (count / (N + count))
+	100f32 * count / (N + count)
 }
 
-fn calc_similarity(a: &str, b: &str) -> f32 { // TODO
-	1f32
+fn one_char_off(a: &str, b: &str) -> bool {
+	for i in 0..a.len() {
+		let mut s = a.to_string();
+		s.remove(i);
+		if &s == b {
+			return true;
+		}
+	}
+
+	false
+}
+
+fn sym_one_char_off(a: &str, b: &str) -> bool {
+	one_char_off(a, b) || one_char_off(b, a)
+}
+
+fn one_switch_off(a: &str, b: &str) -> bool {
+	for i in 0..(a.len()-1) {
+		let mut s = a.to_string();
+		let c = s.remove(i);
+		s.insert(i+1, c);
+		if &s == b {
+			return true;
+		}
+	}
+
+	false
+}
+
+fn calc_similarity(a: &str, b: &str) -> f32 {
+	if sym_one_char_off(a, b) {
+		return 1.;
+	} else if one_switch_off(a, b) {
+		return 2.;
+	}
+
+	return 0.;
 }
 
 pub fn find_typos<'a>(words: &'a Words<'a>) -> Vec<Typo<'a>> {
