@@ -16,6 +16,7 @@ impl<'a> Typo<'a> {
 
 fn get_chance<'a>(word: &str, words: &Words<'a>) -> f32 {
 	let count: f32 = words.map.keys()
+		.filter(|&x| word != x)
 		.map(|other| {
 			let freq = |x: &str| words.map.get(x).unwrap().len() as f32;
 			let r = freq(other) / freq(word);
@@ -93,9 +94,11 @@ pub fn find_typos<'a>(words: &'a Words<'a>) -> Vec<Typo<'a>> {
 
 pub fn dump_typos<'a>(words: &Words<'a>, typos: &[Typo<'a>]) {
 	for typo in typos {
-		println!("{:?}: {:.2}%", typo.word, typo.chance);
-		for occ in words.map.get(typo.word).unwrap() {
-			println!(" @ {:?}:{}:{}-{}", occ.file, occ.line, occ.column, occ.column + typo.word.len());
+		if typo.chance > 0. {
+			println!("{:?}: {:.2}%", typo.word, typo.chance);
+			for occ in words.map.get(typo.word).unwrap() {
+				println!(" @ {:?}:{}:{}-{}", occ.file, occ.line, occ.column, occ.column + typo.word.len());
+			}
 		}
 	}
 }
