@@ -15,25 +15,20 @@ impl<'a> Typo<'a> {
 }
 
 fn get_chance<'a>(word: &str, words: &Words<'a>) -> f32 {
-	let count = rarity_val(word, &words) * similarity_val(word, &words);
+	let count: f32 = words.map.keys()
+		.map(|other| {
+			let freq = |x: &str| words.map.get(x).unwrap().len() as f32;
+			let r = freq(other) / freq(word);
+
+			let s = calc_similarity(word, other);
+
+			r * s
+		})
+		.sum();
 
 	const N: f32 = 1000f32;
 
 	100f32 * (count / (N + count))
-}
-
-fn rarity_val<'a>(word: &str, words: &Words<'a>) -> f32 {
-	let frequency = words.map.get(word)
-		.unwrap()
-		.len() as f32;
-
-	1f32 / frequency
-}
-
-fn similarity_val<'a>(word: &str, words: &Words<'a>) -> f32 {
-	words.map.keys()
-		.filter(|&x| x != word)
-		.fold(0f32, |sim, w| sim.max(calc_similarity(word, w)))
 }
 
 fn calc_similarity(a: &str, b: &str) -> f32 { // TODO
