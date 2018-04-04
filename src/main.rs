@@ -1,3 +1,5 @@
+pub type Res<T> = Result<T, String>;
+
 mod files;
 mod words;
 mod typos;
