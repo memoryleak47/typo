@@ -30,7 +30,7 @@ impl<'a> Words<'a> {
 		for (line, line_string) in s.lines().enumerate() {
 
 			for (column, c) in line_string.chars().rev().enumerate() {
-				if c.is_alphabetic() {
+				if c.is_ascii_alphabetic() {
 					current_word.insert(0, c);
 				} else if !current_word.is_empty() {
 					words.add_occurence(current_word.to_lowercase(), Occurence { file: path, line, column: column + 1 });
