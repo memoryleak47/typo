@@ -5,14 +5,14 @@ use std::{
 	io::Read,
 };
 
-struct Occurence<'a> {
-	file: &'a Path,
-	line: usize,
-	column: usize,
+pub struct Occurence<'a> {
+	pub file: &'a Path,
+	pub line: usize,
+	pub column: usize,
 }
 
 pub struct Words<'a> {
-	map: HashMap<String, Vec<Occurence<'a>>>
+	pub map: HashMap<String, Vec<Occurence<'a>>>
 }
 
 impl<'a> Words<'a> {

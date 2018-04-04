@@ -13,6 +13,5 @@ fn main() {
 		.unwrap_or_else(|x| panic!(x));
 	let words = words::find_words(&files[..]);
 	let typos = typos::find_typos(words);
-
-	println!("typo candidates:\n{}", typos);
+	typos::dump_typos(typos);
 }
