@@ -4,4 +4,3 @@ version = "0.1.0"
 authors = ["memoryleak47 <memoryleak47@protonmail.ch>"]
 
 [dependencies]
-getopts = "0.2"

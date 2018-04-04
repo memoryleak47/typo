@@ -5,18 +5,20 @@ use std::{
 	io::Read,
 };
 
+#[derive(Clone)]
 pub struct Occurence<'a> {
 	pub file: &'a Path,
 	pub line: usize,
 	pub column: usize,
 }
 
+#[derive(Clone)]
 pub struct Words<'a> {
 	pub map: HashMap<String, Vec<Occurence<'a>>>
 }
 
 impl<'a> Words<'a> {
-	fn new() -> Words<'a> {
+	pub fn new() -> Words<'a> {
 		Words { map: HashMap::new() }
 	}
 

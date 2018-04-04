@@ -12,6 +12,6 @@ fn main() {
 	let files = files::find_files(path)
 		.unwrap_or_else(|x| panic!(x));
 	let words = words::find_words(&files[..]);
-	let typos = typos::find_typos(words);
-	typos::dump_typos(typos);
+	let typos = typos::find_typos(&words);
+	typos::dump_typos(&words, &typos[..]);
 }
