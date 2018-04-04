@@ -33,12 +33,12 @@ impl<'a> Words<'a> {
 				if c.is_ascii_alphabetic() {
 					current_word.insert(0, c);
 				} else if !current_word.is_empty() {
-					words.add_occurence(current_word.to_lowercase(), Occurence { file: path, line: line+1, column: column + 1 });
+					words.add_occurence(current_word.to_lowercase(), Occurence { file: path, line: line+1, column: line_string.chars().count() - column + 1 });
 					current_word = String::new();
 				}
 			}
 			if !current_word.is_empty() {
-				words.add_occurence(current_word.to_lowercase(), Occurence { file: path, line: line+1, column: 0 });
+				words.add_occurence(current_word.to_lowercase(), Occurence { file: path, line: line+1, column: 1 });
 				current_word = String::new();
 			}
 		}

@@ -97,7 +97,7 @@ pub fn dump_typos<'a>(words: &Words<'a>, typos: &[Typo<'a>]) {
 		if typo.chance > 0. {
 			println!("{:?}: {:.2}%", typo.word, typo.chance);
 			for occ in words.map.get(typo.word).unwrap() {
-				println!(" @ {:?}:{}:{}-{}", occ.file, occ.line, occ.column, occ.column + typo.word.len());
+				println!(" @ {:?}:{},{}-{}", occ.file, occ.line, occ.column, occ.column + typo.word.len() - 1);
 			}
 		}
 	}
