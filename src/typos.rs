@@ -1,5 +1,5 @@
-use std::path::PathBuf;
+use words::Words;
 
-pub fn find_typos(files: Vec<PathBuf>) -> ! {
+pub fn find_typos(words: Words) -> ! {
 	unimplemented!()
 }
