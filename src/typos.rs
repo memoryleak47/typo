@@ -22,6 +22,8 @@ fn get_chance<'a>(word: &str, words: &Words<'a>) -> f32 {
 
 			let s = calc_similarity(word, other);
 
+			if word.len() < 4 { return 0.; }
+
 			r * s
 		})
 		.sum();
@@ -32,6 +34,8 @@ fn get_chance<'a>(word: &str, words: &Words<'a>) -> f32 {
 }
 
 fn one_char_off(a: &str, b: &str) -> bool {
+	if a.len() + 1 != b.len() { return false; }
+
 	for i in 0..a.len() {
 		let mut s = a.to_string();
 		s.remove(i);
@@ -48,6 +52,8 @@ fn sym_one_char_off(a: &str, b: &str) -> bool {
 }
 
 fn one_switch_off(a: &str, b: &str) -> bool {
+	if a.len() != b.len() { return false; }
+
 	for i in 0..(a.len()-1) {
 		let mut s = a.to_string();
 		let c = s.remove(i);
@@ -73,8 +79,11 @@ fn calc_similarity(a: &str, b: &str) -> f32 {
 pub fn find_typos<'a>(words: &'a Words<'a>) -> Vec<Typo<'a>> {
 	let mut typos = Vec::new();
 
-	for word in words.map.keys() {
+	let l = words.map.keys().len();
+
+	for (i, word) in words.map.keys().enumerate() {
 		typos.push(Typo::new(word, &words));
+		println!("{}/{}", i, l);
 	}
 
 	typos.sort_unstable_by(|a, b| b.chance.partial_cmp(&a.chance).unwrap());

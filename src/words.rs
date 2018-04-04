@@ -30,15 +30,15 @@ impl<'a> Words<'a> {
 		for (line, line_string) in s.lines().enumerate() {
 
 			for (column, c) in line_string.chars().rev().enumerate() {
-				if c.is_alphabetic() || c == '_' {
+				if c.is_alphabetic() {
 					current_word.insert(0, c);
 				} else if !current_word.is_empty() {
-					words.add_occurence(current_word, Occurence { file: path, line, column: column + 1 });
+					words.add_occurence(current_word.to_lowercase(), Occurence { file: path, line, column: column + 1 });
 					current_word = String::new();
 				}
 			}
 			if !current_word.is_empty() {
-				words.add_occurence(current_word, Occurence { file: path, line, column: 0 });
+				words.add_occurence(current_word.to_lowercase(), Occurence { file: path, line, column: 0 });
 				current_word = String::new();
 			}
 		}
@@ -67,8 +67,10 @@ impl<'a> Words<'a> {
 
 fn read(file: &Path) -> String {
 	let mut s = String::new();
-	File::open(file).unwrap()
-		.read_to_string(&mut s).unwrap();
+	if File::open(file).expect("failed opening file")
+		.read_to_string(&mut s).is_err() {
+		s = String::new();
+	}
 	s
 }
 
