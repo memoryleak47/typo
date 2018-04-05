@@ -15,23 +15,22 @@ impl<'a> Typo<'a> {
 }
 
 fn get_chance<'a>(word: &str, words: &Words<'a>) -> f32 {
-	let count: f32 = words.map.keys()
-		.filter(|&x| word != x)
-		.map(|other| {
-			let freq = |x: &str| words.map.get(x).unwrap().len() as f32;
-			let r = freq(other) / freq(word);
+	let freq = |x: &str| words.map.get(x).unwrap().len();
 
-			let s = calc_similarity(word, other);
-
-			if word.len() < 4 { return 0.; }
-
-			r * s
-		})
-		.sum();
-
-	const N: f32 = 1000f32;
-
-	100f32 * count / (N + count)
+	100.
+		* words.map.keys()
+			.filter(|&x| word != x)
+			.map(|other| calc_similarity(word, other))
+			.fold(0.0, |x: f32, y: f32| x.max(y))
+		* 1. / (10f32).powi((freq(word) - 1) as i32)
+		* match word.len() {
+			0 => 0.0,
+			1 => 0.0,
+			2 => 0.001,
+			3 => 0.01,
+			4 => 0.5,
+			_ => 1.0,
+		}
 }
 
 fn one_char_off(a: &str, b: &str) -> bool {
@@ -69,12 +68,12 @@ fn one_switch_off(a: &str, b: &str) -> bool {
 
 fn calc_similarity(a: &str, b: &str) -> f32 {
 	if sym_one_char_off(a, b) {
-		return 1.;
+		return 0.5;
 	} else if one_switch_off(a, b) {
-		return 2.;
+		return 0.9;
 	}
 
-	return 0.;
+	return 0.0;
 }
 
 pub fn find_typos<'a>(words: &'a Words<'a>) -> Vec<Typo<'a>> {
@@ -94,7 +93,7 @@ pub fn find_typos<'a>(words: &'a Words<'a>) -> Vec<Typo<'a>> {
 
 pub fn dump_typos<'a>(words: &Words<'a>, typos: &[Typo<'a>]) {
 	for typo in typos {
-		if typo.chance > 0. {
+		if typo.chance >= 1.0 {
 			println!("{:?}: {:.2}%", typo.word, typo.chance);
 			for occ in words.map.get(typo.word).unwrap() {
 				println!(" @ {:?}:{},{}-{}", occ.file, occ.line, occ.column, occ.column + typo.word.len() - 1);
