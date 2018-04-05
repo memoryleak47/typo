@@ -83,7 +83,7 @@ pub fn find_typos<'a>(words: &'a Words<'a>) -> Vec<Typo<'a>> {
 
 	for (i, word) in words.map.keys().enumerate() {
 		typos.push(Typo::new(word, &words));
-		println!("{}/{}", i, l);
+		println!("{}/{}", i+1, l);
 	}
 
 	typos.sort_unstable_by(|a, b| b.chance.partial_cmp(&a.chance).unwrap());
